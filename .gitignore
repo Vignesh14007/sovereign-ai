@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Backup archives
+*.tar.gz
+*.zip
+
+# Local model files
+*.gguf
+*.bin
+models/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Local project data / documents
+data/
+data/

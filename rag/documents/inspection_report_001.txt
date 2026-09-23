@@ -1,0 +1,21 @@
+INSPECTION REPORT — HEAT EXCHANGER HX-101
+
+Equipment: Heat Exchanger HX-101
+Inspection Date: 2026-08-20
+Inspection Type: Routine Visual and Thickness Inspection
+
+FINDINGS:
+1. Minor surface corrosion was observed near the outlet nozzle.
+2. Measured wall thickness at inspection point P3 was 8.4 mm.
+3. The nominal wall thickness specified for the equipment is 10.0 mm.
+4. No visible leakage was observed during the inspection.
+5. The equipment was operational during inspection.
+
+RECOMMENDATIONS:
+1. Continue periodic thickness monitoring.
+2. Perform detailed corrosion assessment during the next planned maintenance window.
+3. Review the inspection history before deciding on further maintenance.
+
+NOTE:
+This is a synthetic demonstration document created for the Sovereign AI Workbench prototype.
+It does not contain confidential MRPL information.
