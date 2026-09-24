@@ -1063,13 +1063,6 @@ Keep data preparation and training workflows structured and repeatable.
 
 ---
 
-# 🌐 Repository
-
-🔗 **GitHub:**  
-https://github.com/Vignesh14007/sovereign-ai
-
----
-
 # 🛡️ Data & Security Notice
 
 This public repository contains the **software implementation and development workflows**.
@@ -1077,14 +1070,6 @@ This public repository contains the **software implementation and development wo
 Private industrial documents, local datasets, credentials, model files, and environment-specific files are intentionally excluded from version control.
 
 Do not commit confidential enterprise information, API keys, passwords, private certificates, or production credentials to this repository.
-
----
-
-# 📜 License
-
-This project is currently maintained as a project/research prototype.
-
-A formal open-source license can be added when the project owner determines the appropriate licensing model.
 
 ---
 
