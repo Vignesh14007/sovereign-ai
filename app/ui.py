@@ -1,225 +1,559 @@
 import streamlit as st
-from pathlib import Path
-import sys
 
-BASE_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(BASE_DIR))
+from app.auth.session import (
+    initialize_session,
+    is_authenticated,
+    is_admin,
+    is_employee,
+    get_current_user,
+    logout_user,
+    has_permission,
+)
+
+from app.auth.ui import render_auth_ui
+
+from app.auth.history import (
+    create_history_record,
+    get_employee_history,
+)
 
 from app.agent.orchestrator import run_agent
+from app.admin.panel import render_admin_panel
 
 
 # ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
     page_title="Sovereign AI Workbench",
     page_icon="🛡️",
-    layout="centered",
-    initial_sidebar_state="collapsed",
+    layout="wide",
 )
 
 
 # ============================================================
-# CUSTOM CSS
+# GLOBAL SESSION INITIALIZATION
 # ============================================================
 
-st.markdown("""
-<style>
-    .block-container {
-        max-width: 900px;
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
+initialize_session()
 
-    .brand {
-        text-align: center;
-        margin-bottom: 2.5rem;
-    }
 
-    .brand-title {
-        font-size: 38px;
+# ============================================================
+# GLOBAL STYLING
+# ============================================================
+
+st.markdown(
+    """
+    <style>
+
+    .main-title {
+        font-size: 34px;
         font-weight: 700;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
-    .brand-subtitle {
+    .main-subtitle {
         font-size: 16px;
-        color: #888;
+        opacity: 0.70;
+        margin-bottom: 25px;
     }
 
-    .answer-box {
-        border: 1px solid rgba(128,128,128,0.25);
-        border-radius: 14px;
-        padding: 24px;
-        margin-top: 25px;
+    .secure-status {
+        padding: 10px 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 180, 100, 0.25);
+        background: rgba(0, 180, 100, 0.06);
+        margin-top: 20px;
     }
 
-    .result-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 15px;
+    .history-card {
+        padding: 15px;
+        border: 1px solid rgba(128,128,128,0.20);
+        border-radius: 12px;
+        margin-bottom: 12px;
     }
 
-    .status {
-        text-align: center;
-        color: #21c55d;
-        font-size: 13px;
-        margin-top: 12px;
-    }
-
-    footer {
-        visibility: hidden;
-    }
-</style>
-""", unsafe_allow_html=True)
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 
 # ============================================================
 # HEADER
 # ============================================================
 
-st.markdown("""
-<div class="brand">
-    <div class="brand-title">🛡️ Sovereign AI Workbench</div>
-    <div class="brand-subtitle">
-        Confidential Industrial Intelligence
-    </div>
-</div>
-""", unsafe_allow_html=True)
+def render_header():
+
+    col1, col2 = st.columns(
+        [5, 1]
+    )
+
+    with col1:
+
+        st.markdown(
+            '<div class="main-title">'
+            '🛡️ Sovereign AI Workbench'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            '<div class="main-subtitle">'
+            'Confidential Industrial Intelligence'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+    with col2:
+
+        if st.button(
+            "Logout",
+            use_container_width=True,
+        ):
+
+            logout_user()
+            st.rerun()
 
 
 # ============================================================
-# INPUT
+# EMPLOYEE SIDEBAR
 # ============================================================
 
-request = st.text_area(
-    "Your request",
-    placeholder=(
-        "Ask an industrial question or describe a task...\n\n"
-        "For example:\n"
-        "What was the highest gross crude throughput in FY 2022-23?"
-    ),
-    height=150,
-    label_visibility="collapsed",
-)
+def render_employee_sidebar():
 
+    user = get_current_user()
 
-uploaded_file = st.file_uploader(
-    "Upload a document or image",
-    type=["png", "jpg", "jpeg", "pdf", "txt"],
-)
+    st.sidebar.markdown(
+        "### 👤 Employee"
+    )
+
+    st.sidebar.write(
+        f"**{user.get('name', 'Employee')}**"
+    )
+
+    st.sidebar.caption(
+        user.get("email", "")
+    )
+
+    st.sidebar.divider()
+
+    page = st.sidebar.radio(
+        "Workspace",
+        [
+            "AI Workbench",
+            "My History",
+            "My Profile",
+        ],
+    )
+
+    st.sidebar.divider()
+
+    st.sidebar.success(
+        "● Secure local workspace"
+    )
+
+    return page
 
 
 # ============================================================
-# RUN
+# EMPLOYEE AI WORKBENCH
 # ============================================================
 
-run_button = st.button(
-    "Run",
-    type="primary",
-    use_container_width=True,
-)
+def render_employee_workbench():
 
+    st.subheader(
+        "🤖 AI Workbench"
+    )
 
-if run_button:
+    st.write(
+        "Ask questions about authorized industrial "
+        "documents, operational information and "
+        "available local AI tools."
+    )
 
-    if not request.strip():
-        st.warning("Please enter a question or task.")
-        st.stop()
+    if not has_permission("ai"):
 
-    image_path = None
+        st.warning(
+            "Your account does not currently have "
+            "AI Workbench permission."
+        )
 
-    if uploaded_file is not None:
+        return
 
-        input_dir = BASE_DIR / "data" / "input"
-        input_dir.mkdir(parents=True, exist_ok=True)
+    request = st.text_area(
+        "Enter your request",
+        placeholder=(
+            "Example: What was the highest gross crude "
+            "throughput achieved by MRPL in FY 2022-23?"
+        ),
+        height=140,
+    )
 
-        image_path = input_dir / uploaded_file.name
+    uploaded_file = st.file_uploader(
+        "Optional document or image",
+        type=[
+            "png",
+            "jpg",
+            "jpeg",
+            "pdf",
+            "txt",
+        ],
+    )
 
-        with open(image_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
+    if st.button(
+        "Run AI",
+        type="primary",
+        use_container_width=True,
+    ):
 
-    with st.spinner("Processing..."):
+        if not request.strip():
+
+            st.warning(
+                "Please enter a request."
+            )
+
+            return
+
+        user = get_current_user()
+
+        image_path = None
+
+        if uploaded_file:
+
+            input_dir = (
+                "data/input"
+            )
+
+            import os
+
+            os.makedirs(
+                input_dir,
+                exist_ok=True,
+            )
+
+            file_path = os.path.join(
+                input_dir,
+                uploaded_file.name,
+            )
+
+            with open(
+                file_path,
+                "wb",
+            ) as file:
+
+                file.write(
+                    uploaded_file.getbuffer()
+                )
+
+            image_path = file_path
 
         try:
 
-            result = run_agent(
-                request=request.strip(),
-                image_path=str(image_path) if image_path else None,
-            )
+            with st.spinner(
+                "Processing with local AI..."
+            ):
 
-        except Exception as e:
-            st.error(
-                "Something went wrong while processing your request."
-            )
-            st.stop()
+                if image_path:
 
+                    result = run_agent(
+                        request,
+                        image_path=image_path,
+                    )
 
-    # ========================================================
-    # RESULT
-    # ========================================================
+                else:
 
-    answer = result.get("answer", "")
+                    result = run_agent(
+                        request
+                    )
 
-    if answer:
+            response_text = result.get("answer", "No answer available.")
 
-        st.markdown("""
-        <div class="answer-box">
-            <div class="result-title">Result</div>
-        """, unsafe_allow_html=True)
-
-        st.write(answer)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-
-    # ========================================================
-    # GENERATED REVIEW
-    # ========================================================
-
-    generated_review = result.get("generated_review")
-
-    if generated_review:
-
-        st.markdown("""
-        <div class="answer-box">
-            <div class="result-title">Review</div>
-        """, unsafe_allow_html=True)
-
-        st.text(generated_review)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-
-    # ========================================================
-    # GENERATED DELIVERABLE
-    # ========================================================
-
-    output_path = result.get("output")
-
-    if output_path and Path(output_path).exists():
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        with open(output_path, "rb") as f:
-            st.download_button(
-                "Download Document",
-                data=f.read(),
-                file_name=Path(output_path).name,
-                mime=(
-                    "application/vnd.openxmlformats-officedocument."
-                    "wordprocessingml.document"
+            create_history_record(
+                employee_id=user["id"],
+                request=request,
+                task_type=None,
+                response=response_text,
+                source_documents=(
+                    uploaded_file.name
+                    if uploaded_file
+                    else None
                 ),
-                use_container_width=True,
+                execution_status="completed",
+            )
+
+            st.success(
+                "Request completed."
+            )
+
+            st.markdown(
+                "### Result"
+            )
+
+            st.write(
+                response_text
+            )
+
+        except Exception as error:
+
+            error_text = str(error)
+
+            create_history_record(
+                employee_id=user["id"],
+                request=request,
+                task_type=None,
+                response=error_text,
+                source_documents=(
+                    uploaded_file.name
+                    if uploaded_file
+                    else None
+                ),
+                execution_status="failed",
+            )
+
+            st.error(
+                "The request could not be completed."
+            )
+
+            st.exception(error)
+
+
+# ============================================================
+# EMPLOYEE HISTORY
+# ============================================================
+
+def render_employee_history():
+
+    st.subheader(
+        "📚 My History"
+    )
+
+    user = get_current_user()
+
+    history = get_employee_history(
+        user["id"],
+        limit=50,
+    )
+
+    if not history:
+
+        st.info(
+            "You have no previous AI requests."
+        )
+
+        return
+
+    st.caption(
+        f"{len(history)} recent request(s)"
+    )
+
+    for record in history:
+
+        created_at = record.get(
+            "created_at",
+            "",
+        )
+
+        request = record.get(
+            "request",
+            "",
+        )
+
+        response = record.get(
+            "response",
+            "",
+        )
+
+        status = record.get(
+            "execution_status",
+            "completed",
+        )
+
+        with st.expander(
+            f"{created_at} — {status.upper()}"
+        ):
+
+            st.markdown(
+                "**Request**"
+            )
+
+            st.write(
+                request
+            )
+
+            st.markdown(
+                "**Response**"
+            )
+
+            st.write(
+                response
+            )
+
+            source = record.get(
+                "source_documents"
+            )
+
+            if source:
+
+                st.markdown(
+                    f"**Source:** {source}"
+                )
+
+
+# ============================================================
+# EMPLOYEE PROFILE
+# ============================================================
+
+def render_employee_profile():
+
+    st.subheader(
+        "👤 My Profile"
+    )
+
+    user = get_current_user()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.markdown(
+            f"**Name**  \n"
+            f"{user.get('name', '')}"
+        )
+
+        st.markdown(
+            f"**Employee ID**  \n"
+            f"{user.get('id', '')}"
+        )
+
+    with col2:
+
+        st.markdown(
+            f"**Email**  \n"
+            f"{user.get('email', '')}"
+        )
+
+        st.markdown(
+            "**Role**  \n"
+            "Employee"
+        )
+
+    st.divider()
+
+    st.markdown(
+        "### 🔑 Permissions"
+    )
+
+    permissions = [
+        ("AI Workbench", "ai"),
+        ("Documents", "documents"),
+        ("Reports", "reports"),
+        ("Code Execution", "code_execution"),
+        (
+            "Sensitive Documents",
+            "sensitive_documents",
+        ),
+    ]
+
+    for label, permission in permissions:
+
+        if has_permission(permission):
+
+            st.success(
+                f"✓ {label}"
+            )
+
+        else:
+
+            st.info(
+                f"○ {label}"
             )
 
 
 # ============================================================
-# FOOTER
+# EMPLOYEE WORKSPACE
 # ============================================================
 
-st.markdown(
-    '<div class="status">● Secure local workspace</div>',
-    unsafe_allow_html=True,
-)
+def render_employee_workspace():
+
+    render_header()
+
+    page = render_employee_sidebar()
+
+    if page == "AI Workbench":
+
+        render_employee_workbench()
+
+    elif page == "My History":
+
+        render_employee_history()
+
+    elif page == "My Profile":
+
+        render_employee_profile()
+
+
+# ============================================================
+# ADMIN WORKSPACE
+# ============================================================
+
+def render_admin_workspace():
+
+    render_header()
+
+    st.sidebar.markdown(
+        "### 🔐 Administrator"
+    )
+
+    user = get_current_user()
+
+    st.sidebar.write(
+        f"**{user.get('name', 'Administrator')}**"
+    )
+
+    st.sidebar.caption(
+        user.get("email", "")
+    )
+
+    st.sidebar.divider()
+
+    page = st.sidebar.radio(
+        "Administration",
+        [
+            "Admin Panel",
+        ],
+    )
+
+    st.sidebar.divider()
+
+    st.sidebar.success(
+        "● Secure local workspace"
+    )
+
+    if page == "Admin Panel":
+
+        render_admin_panel()
+
+
+# ============================================================
+# APPLICATION ROUTER
+# ============================================================
+
+if not is_authenticated():
+
+    render_auth_ui()
+
+elif is_admin():
+
+    render_admin_workspace()
+
+elif is_employee():
+
+    render_employee_workspace()
+
+else:
+
+    logout_user()
+
+    st.rerun()

@@ -36,4 +36,6 @@ models/
 
 # Local project data / documents
 data/
-data/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
