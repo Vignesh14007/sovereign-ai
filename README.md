@@ -1,1082 +1,1134 @@
-# 🏭 SOVEREIGN AI WORKBENCH
+# 🛡️ Sovereign AI Workbench
 
-### 🔐 An On-Premise Agentic Multimodal AI Platform for Confidential Industrial Intelligence
+### An On-Premise Agentic Multimodal AI Platform for Confidential Industrial Intelligence
 
-<p align="center">
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-Local%20LLM-000000?style=for-the-badge)
+![Streamlit](https://img.shields.io/badge/Streamlit-UI-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![RAG](https://img.shields.io/badge/RAG-Local%20Knowledge%20Grounding-6A5ACD?style=for-the-badge)
+![License](https://img.shields.io/badge/License-Educational%20Prototype-lightgrey?style=for-the-badge)
 
-<img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/LLM-Mistral-FF7000?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Runtime-Ollama-black?style=for-the-badge" />
-<img src="https://img.shields.io/badge/AI-RAG-8A2BE2?style=for-the-badge" />
-<img src="https://img.shields.io/badge/AI-Agentic%20AI-6A5ACD?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Deployment-On--Premise-2E8B57?style=for-the-badge" />
-
-</p>
-
-<p align="center">
-<strong>Natural Language → Agentic Orchestration → Enterprise Knowledge → Evidence → Local AI Reasoning</strong>
-</p>
+> **Sovereign AI Workbench** is a prototype industrial AI platform designed around local inference, local enterprise knowledge, controlled tool execution, multimodal inspection workflows, role-based access, and auditability.
 
 ---
 
-## 🧠 Overview
+## 🎯 Project Overview
 
-**Sovereign AI Workbench** is an **on-premise agentic multimodal AI platform** designed for confidential industrial intelligence.
+**Sovereign AI Workbench** is developed for **Smart India Hackathon 2026 — SIH26117**, under the problem context provided by **Mangalore Refinery and Petrochemicals Limited (MRPL)**.
 
-Industrial organizations generate large volumes of heterogeneous information across:
+Industrial organizations work with information spread across:
 
 - 📊 Sensor and time-series data
 - 🗄️ SQL databases
-- 🔧 Maintenance records
+- 📝 Maintenance records
 - 📘 Standard Operating Procedures (SOPs)
 - 📚 Technical manuals
 - 📄 Inspection reports
-- 🖼️ Machine and inspection images
-- 📝 Operational logs
-- ⚠️ Historical failure records
-- 🏭 Engineering and annual reports
+- 🖼️ Engineering drawings and inspection images
+- 🧾 Operational logs
+- ⚠️ Failure history
+- 📑 Internal documents and reports
 
-The challenge is not simply storing this information. The challenge is enabling engineers and operators to **query, retrieve, analyze, and reason across these different sources through a unified natural-language interface**.
+The challenge is not simply storing this information. The challenge is connecting the relevant sources when an engineer investigates a real operational question.
 
 For example:
 
-> **"Why did Compressor C-204 show abnormal behavior last week?"**
+> **“Why did Compressor C-204 show abnormal behavior last week?”**
 
-Answering such a question may require retrieving operational information, identifying abnormal trends, checking historical failures, reviewing maintenance records, searching technical documentation, and examining inspection information.
+A useful investigation may require structured data analysis, document retrieval, historical maintenance information, visual inspection evidence, and verification of the final response.
 
-Sovereign AI Workbench provides an AI-driven architecture for coordinating these workflows while supporting an **on-premise-first deployment model**.
+Sovereign AI Workbench is designed to provide this workflow through a **controlled local AI environment** rather than depending on an external AI inference API.
 
 ---
 
-# 🎯 Problem Statement
+# 🧩 Problem Statement
 
-Industrial intelligence is often fragmented across disconnected systems.
+### SIH26117
 
-A typical investigation may require:
+**Problem Statement:**  
+**Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work**
+
+**Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
+**Category:** Software  
+**Theme:** Smart Automation
+
+### Core Problem
+
+Industrial information is fragmented across multiple systems and formats. Conventional chat interfaces generally answer from a single context and do not provide a controlled workflow for:
+
+1. Understanding an industrial request
+2. Selecting the appropriate capability
+3. Retrieving authorized knowledge
+4. Querying structured information
+5. Executing controlled tools
+6. Processing visual evidence
+7. Correlating evidence
+8. Producing an auditable response
+
+At the same time, confidential industrial information may require deployment within an organization's controlled infrastructure.
+
+---
+
+# 💡 Our Solution
+
+Sovereign AI Workbench brings together:
+
+**Local LLMs + Agent Orchestration + RAG + Multimodal AI + Tool Execution + RBAC + Audit History**
+
+Instead of a simple:
 
 ```text
-Sensor / Time-Series Data
-          +
-SQL Databases
-          +
-Maintenance Records
-          +
-SOPs & Technical Manuals
-          +
-Inspection Reports
-          +
-Machine Images
-          +
-Historical Failure Data
-          ↓
-   Manual Investigation
+User → Chatbot → Answer
 ```
 
-This creates several challenges:
-
-- 🔀 Information is distributed across different systems.
-- 🔎 Engineers must manually search multiple sources.
-- 🔗 Structured and unstructured data are difficult to use together.
-- 🕐 Historical context can take time to retrieve.
-- 📚 Technical documentation is disconnected from operational information.
-- 🤖 Conventional chat interfaces do not inherently coordinate multiple enterprise tools.
-- 🔐 Confidential industrial information may require strict data-governance boundaries.
-
----
-
-# 💡 Proposed Solution
-
-Sovereign AI Workbench introduces an **agentic intelligence layer** between the user and enterprise information sources.
+the target architecture is:
 
 ```text
-                         👤 USER
-                           │
-                           ▼
-                  💬 Natural Language Query
-                           │
-                           ▼
-                🧠 Intent / Domain Classifier
-                           │
-                           ▼
-                  🤖 Agent Orchestrator
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-      📚 RAG          📄 File Tools     🛠️ AI Tools
-     Retrieval         & Analysis       & Services
-          │                │                │
-          └────────────────┼────────────────┘
-                           ▼
-                  🔎 Evidence Collection
-                           │
-                           ▼
-                   🧠 Local LLM
-                           │
-                           ▼
-                 💬 Contextual Answer
-                           │
-                           ▼
-                    🔐 Audit Layer
+User
+  ↓
+Authentication & Authorization
+  ↓
+AI Workbench
+  ↓
+Task Classification
+  ↓
+Agent / Capability Selection
+  ├── Knowledge / RAG
+  ├── Structured Data
+  ├── Code / Calculation
+  ├── Vision
+  └── Inspection Review
+  ↓
+Local Tools & Authorized Data
+  ↓
+Evidence / Result Processing
+  ↓
+Local LLM Response Generation
+  ↓
+History / Audit Record
+  ↓
+User
 ```
 
-The platform is built around three core principles:
-
-### 🔐 Sovereignty
-Sensitive industrial information can remain within the organization's controlled infrastructure.
-
-### 🤖 Agentic Reasoning
-The system can classify requests, determine appropriate processing paths, and coordinate available tools.
-
-### 🌐 Multimodal Intelligence
-The architecture is designed to work across documents, structured information, operational data, and visual inspection information.
+The current prototype implements the foundation of this architecture and is designed to be extended into a broader multi-agent industrial workbench.
 
 ---
 
-# 🚀 Core Capabilities
+# 🤖 What Makes It Agentic?
 
-## 🤖 Agentic AI
+The system is designed around **task-driven orchestration**, rather than treating every request as ordinary chat.
 
-The platform uses an agent-oriented architecture instead of treating every request as a simple question-answering task.
+A request can be classified according to the required capability.
 
-The agent layer contains components for:
-
-- 🧠 Domain classification
-- 🎯 Intent identification
-- 🔄 Request orchestration
-- 🛠️ Tool selection
-- ⚙️ Tool execution
-- 🔎 Evidence retrieval
-- 💬 Response generation
-- 🔐 Audit logging
-
-This provides a foundation for multi-step industrial reasoning.
-
----
-
-## 📚 Retrieval-Augmented Generation
-
-The RAG pipeline retrieves relevant information before generating a response.
+### Example
 
 ```text
-📄 Industrial Documents
-          │
-          ▼
-   📥 Document Processing
-          │
-          ▼
-      🧹 Cleaning
-          │
-          ▼
-      ✂️ Chunking
-          │
-          ▼
-   🔍 Filtering
-          │
-          ▼
- 📚 Knowledge Corpus
-          │
-          ▼
-    🔎 Retriever
-          │
-          ▼
-  📌 Relevant Context
-          │
-          ▼
-      🧠 Local LLM
-          │
-          ▼
-   💬 Grounded Response
+User:
+"Review this compressor inspection note and identify relevant
+maintenance information."
 ```
 
-The repository contains components for:
+The orchestrator can:
 
-- Document processing
-- Chunk generation
-- Data cleaning
-- Chunk filtering
-- Retrieval
-- Question answering
-- Knowledge-corpus preparation
+```text
+1. Understand request
+        ↓
+2. Classify task
+        ↓
+3. Select local capability/model
+        ↓
+4. Retrieve relevant knowledge
+        ↓
+5. Process the request
+        ↓
+6. Generate result
+        ↓
+7. Create an output artifact when required
+        ↓
+8. Record the operation in employee history
+```
+
+The architecture is intentionally modular so additional agents and tools can be introduced without replacing the complete application.
 
 ---
 
-# 🖼️ Multimodal Industrial Intelligence
+# 🏗️ Current Architecture
 
-Industrial information is not limited to text.
+```text
+                         ┌─────────────────────────┐
+                         │       Streamlit UI      │
+                         │ Authentication / RBAC   │
+                         └────────────┬────────────┘
+                                      │
+                                      ▼
+                         ┌─────────────────────────┐
+                         │     AI Orchestrator     │
+                         │ Task Classification     │
+                         │ Capability Selection    │
+                         └────────────┬────────────┘
+                                      │
+              ┌───────────────────────┼────────────────────────┐
+              │                       │                        │
+              ▼                       ▼                        ▼
+       ┌─────────────┐        ┌──────────────┐         ┌──────────────┐
+       │ Local LLM   │        │ Local RAG    │         │ Vision Model │
+       │   Ollama    │        │ Knowledge    │         │   LLaVA      │
+       │   Mistral   │        │ Retrieval    │         │              │
+       └──────┬──────┘        └──────┬───────┘         └──────────────┘
+              │                      │
+              └──────────────┬───────┘
+                             ▼
+                  ┌──────────────────────┐
+                  │ Controlled Local     │
+                  │ Tools / Documents    │
+                  │ / Database           │
+                  └──────────┬───────────┘
+                             ▼
+                  ┌──────────────────────┐
+                  │ Response + Artifact  │
+                  │ + Employee History   │
+                  └──────────────────────┘
+```
 
-The platform is designed to work across multiple information modalities:
+---
 
-| Modality | Example |
+# 🔐 Sovereignty & Privacy Design
+
+The central design principle is to keep AI processing and enterprise knowledge inside the organization's controlled infrastructure.
+
+### Local inference
+
+The prototype uses locally hosted models through **Ollama**.
+
+```text
+Application
+    ↓
+localhost:11434
+    ↓
+Ollama
+    ↓
+Local Model
+    ↓
+Local Response
+```
+
+The application does not require an external cloud AI API for its core inference workflow.
+
+### Important deployment principle
+
+The prototype is **designed for controlled on-premise deployment**.
+
+A production MRPL deployment would additionally require organization-approved:
+
+- Network isolation
+- Firewall / egress controls
+- Secrets management
+- Container or OS sandboxing
+- Identity integration
+- Centralized audit infrastructure
+- Security monitoring
+- Backup and recovery
+- Model governance
+
+The prototype therefore avoids claiming that the current development environment is automatically a fully air-gapped production system.
+
+---
+
+# 🧠 Local LLM Layer
+
+The prototype is designed around open-weight models hosted locally.
+
+### Text Model
+
+Current prototype model:
+
+```text
+Mistral 7B-class model
+↓
+Ollama
+↓
+Local inference
+```
+
+### Vision Model
+
+Current multimodal capability:
+
+```text
+LLaVA
+↓
+Local image understanding
+```
+
+The architecture can later support additional local models and task-based model routing.
+
+---
+
+# 📚 Local RAG Knowledge System
+
+The Workbench includes a local knowledge-management and retrieval layer.
+
+### Knowledge pipeline
+
+```text
+PDF / DOCX / TXT
+       ↓
+Document Ingestion
+       ↓
+Text Extraction
+       ↓
+Cleaning
+       ↓
+Section-Aware Chunking
+       ↓
+Metadata
+       ↓
+Local Knowledge Store
+       ↓
+Retriever
+       ↓
+Relevant Evidence
+       ↓
+Local LLM
+       ↓
+Grounded Answer
+```
+
+### Current retrieval approach
+
+The prototype uses:
+
+- TF-IDF retrieval
+- Unigram + bigram features
+- Cosine similarity
+- Top-k retrieval
+- Minimum relevance threshold
+- Section-aware document chunks
+
+The retrieval layer is intentionally modular so vector embeddings and a local vector database can be introduced later.
+
+---
+
+# 🏭 MRPL Knowledge Demonstration
+
+The prototype has been tested with publicly available MRPL annual-report material.
+
+The knowledge pipeline has processed four annual reports covering:
+
+- FY 2022–23
+- FY 2023–24
+- FY 2024–25
+- FY 2025–26
+
+The current prototype extracts relevant sections and creates a compact retrieval corpus.
+
+### Example grounded question
+
+```text
+What was the highest gross crude throughput achieved by MRPL
+in FY 2022-23, and what were the PFCC and DCU capacity utilizations?
+```
+
+The validated prototype response uses retrieved document evidence rather than requiring the model to rely only on its internal knowledge.
+
+### Grounding principle
+
+If the requested information is not available in the supplied knowledge base, the system is designed to say that the information was not found rather than inventing an answer.
+
+---
+
+# 👁️ Multimodal Industrial Intelligence
+
+Industrial information is not always text.
+
+The Workbench supports a vision workflow for:
+
+- Inspection images
+- Engineering diagrams
+- Process diagrams
+- Scanned material
+- Visual evidence
+
+Example:
+
+```text
+Engineering Image
+       ↓
+Local Vision Model
+       ↓
+Visual Interpretation
+       ↓
+Structured Findings
+       ↓
+Local AI Response
+```
+
+The prototype has been tested with an engineering process-flow image.
+
+For industrial drawings, the system is intentionally conservative about uncertain visual details and can report limitations instead of fabricating unreadable labels or symbols.
+
+---
+
+# 🛠️ Tool Execution
+
+The Workbench can route suitable tasks to controlled local tools.
+
+Example:
+
+```text
+User Request
+     ↓
+Task = Code / Calculation
+     ↓
+Local Python Execution
+     ↓
+Result
+     ↓
+Response
+```
+
+Example request:
+
+```text
+Calculate the average of 10, 20, 30 and 40.
+```
+
+Result:
+
+```text
+25.0
+```
+
+For production deployment, code execution should be strengthened with:
+
+- Container isolation
+- CPU limits
+- Memory limits
+- Execution timeouts
+- Filesystem restrictions
+- Network restrictions
+- Process restrictions
+- Allowlisted libraries / operations
+
+---
+
+# 📝 Inspection Review Workflow
+
+The current prototype includes an inspection-review workflow.
+
+```text
+Inspection Request
+       ↓
+Retrieve relevant knowledge
+       ↓
+Local LLM analysis
+       ↓
+Review Note Generation
+       ↓
+DOCX Artifact
+       ↓
+Employee History
+```
+
+Generated artifacts can be stored locally for controlled access.
+
+---
+
+# 🔐 Authentication & Role-Based Access Control
+
+The current UI includes separate Administrator and Employee workflows.
+
+```text
+                 ┌───────────────┐
+                 │ Role Selection│
+                 └───────┬───────┘
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+        Administrator            Employee
+              │                     │
+              ▼                     ▼
+        Admin Login            Employee Login
+              │                     │
+              ▼                     ▼
+        Admin Workspace        Employee Workspace
+```
+
+### Administrator capabilities
+
+- 👥 Employee management
+- 🔑 Permission management
+- 📚 Knowledge-base management
+- 📊 Dashboard information
+- 📝 System administration workflows
+
+### Employee capabilities
+
+- 🤖 AI Workbench
+- 📜 Personal history
+- 👤 Profile
+- 🔐 Permission-aware access
+
+---
+
+# 👥 Employee Management
+
+Administrators can create employee accounts with:
+
+- Employee ID
+- Name
+- Email
+- Department
+- Designation
+- AI permission
+- Document permission
+- Reports permission
+- Code-execution permission
+- Sensitive-document permission
+
+Employee records support controlled activation and status management.
+
+---
+
+# 🧾 Employee History & Auditability
+
+The system stores employee request history using the employee identity as the access boundary.
+
+Stored information includes:
+
+- Employee ID
+- Request
+- Task type
+- Response
+- Source-document information
+- Execution status
+- Artifact path
+- Timestamp
+
+Employee history queries are filtered by the authenticated employee identity so an employee workspace is intended to expose that employee's own history.
+
+---
+
+# 🗄️ Authentication Database
+
+The prototype uses a local SQLite authentication database.
+
+```text
+data/auth/auth.db
+```
+
+Main tables include:
+
+```text
+admins
+employees
+employee_history
+```
+
+Passwords are stored using password hashing rather than plaintext storage.
+
+> Local authentication data is intentionally excluded from the public repository through `.gitignore`.
+
+---
+
+# 📚 Admin Knowledge Management
+
+The Admin Panel includes knowledge-base management for controlled internal content.
+
+The workflow supports:
+
+```text
+Administrator
+     ↓
+Upload Document
+     ↓
+Document Metadata
+     ↓
+Processing
+     ↓
+Chunking
+     ↓
+Knowledge Store
+     ↓
+Retrieval
+```
+
+Metadata can include:
+
+- Category
+- Department
+- Equipment
+- Description
+- Version
+- Document status
+
+The knowledge-management layer is designed so future production versions can add document version history, approval workflows, richer search, and stronger archival controls.
+
+---
+
+# 🧪 Current Prototype Capabilities
+
+| Capability | Prototype Status |
 |---|---|
-| 📄 Documents | Technical reports, SOPs |
-| 📊 Structured Data | Operational measurements |
-| 🗄️ Databases | Enterprise records |
-| 🖼️ Images | Inspection images |
-| 🔧 Maintenance Data | Maintenance history |
-| ⚠️ Failure Data | Historical failures |
-| 📝 Logs | Operational events |
-
-This architecture provides a foundation for combining textual, structured, and visual evidence.
-
----
-
-# 🧠 Local LLM Execution
-
-The platform is designed around **local LLM execution using Ollama-compatible workflows**.
-
-This allows model inference to operate within the controlled environment rather than requiring every confidential request to be sent to an external AI API.
-
-```text
-🏭 Industrial Environment
-          │
-          ▼
-   🔐 Sovereign AI
-          │
-    ┌─────┴─────┐
-    │           │
-    ▼           ▼
-   📚 RAG     🧠 Local LLM
-    │           │
-    └─────┬─────┘
-          ▼
-     💬 Response
-```
-
-The project also contains model-training and dataset-preparation workflows for domain-specific AI development.
+| Local text LLM inference | ✅ Implemented |
+| Ollama integration | ✅ Implemented |
+| Mistral local inference | ✅ Implemented |
+| Local vision workflow | ✅ Implemented |
+| LLaVA image analysis | ✅ Implemented |
+| Local RAG | ✅ Implemented |
+| MRPL document demonstration | ✅ Implemented |
+| Task classification | ✅ Implemented |
+| Controlled Python execution workflow | ✅ Implemented |
+| Inspection review note | ✅ Implemented |
+| DOCX artifact generation | ✅ Implemented |
+| Admin authentication | ✅ Implemented |
+| Employee authentication | ✅ Implemented |
+| Employee management | ✅ Implemented |
+| Permission management | ✅ Implemented |
+| Employee history | ✅ Implemented |
+| Admin knowledge management | ✅ Implemented |
+| Multi-agent industrial investigation | 🔄 Extension |
+| SQL/data agent | 🔄 Extension |
+| Advanced analytics agent | 🔄 Extension |
+| Production-grade sandbox isolation | 🔄 Extension |
+| Production identity integration | 🔄 Extension |
+| Network egress verification | 🔄 Deployment task |
 
 ---
 
-# 🛠️ Tool-Based Architecture
-
-The platform separates capabilities into reusable tools.
-
-Current tool components include:
-
-- 📄 File reading
-- 📝 Document generation
-- 🧩 Tool registration
-- 🔒 Sandboxed execution
-- 🔐 Audit operations
-
-This architecture allows additional capabilities to be introduced as modular tools.
-
----
-
-# 🔄 Agentic Workflow
-
-A typical request follows this architecture:
-
-```text
-👤 User Question
-       │
-       ▼
-🧠 Intent / Domain Classification
-       │
-       ▼
-🤖 Agent Orchestrator
-       │
-       ├──────────────────┐
-       │                  │
-       ▼                  ▼
-📚 RAG Retrieval      🛠️ Tool Selection
-       │                  │
-       │                  ▼
-       │             ⚙️ Tool Execution
-       │                  │
-       └─────────┬────────┘
-                 ▼
-        🔎 Evidence Collection
-                 │
-                 ▼
-            🧠 Local LLM
-                 │
-                 ▼
-          💬 Final Response
-                 │
-                 ▼
-            🔐 Audit Log
-```
-
----
-
-# 🏭 Example Industrial Investigation
-
-### User Query
-
-```text
-Why did Compressor C-204 show abnormal behavior last week?
-```
-
-The agentic workflow can conceptually perform:
-
-```text
-1️⃣ Identify the equipment
-       ↓
-2️⃣ Determine the relevant time period
-       ↓
-3️⃣ Retrieve operational information
-       ↓
-4️⃣ Analyze abnormal trends
-       ↓
-5️⃣ Search historical failures
-       ↓
-6️⃣ Retrieve maintenance records
-       ↓
-7️⃣ Search technical documentation
-       ↓
-8️⃣ Review available inspection information
-       ↓
-9️⃣ Combine the retrieved evidence
-       ↓
-🔟 Generate a contextual explanation
-```
-
-The target transformation is:
-
-```text
-❌ MANUAL INVESTIGATION
-
-Database
-   ↓
-Reports
-   ↓
-Maintenance Records
-   ↓
-SOPs
-   ↓
-Inspection Records
-   ↓
-Historical Failures
-   ↓
-Manual Analysis
-```
-
-into:
-
-```text
-✅ AGENTIC INVESTIGATION
-
-Natural Language Question
-          ↓
-     AI Orchestration
-          ↓
-   Multiple Data Sources
-          ↓
-    Evidence Retrieval
-          ↓
-      Local Reasoning
-          ↓
-   Contextual Industrial Insight
-```
-
----
-
-# 🧩 Project Architecture
+# 🧱 Project Structure
 
 ```text
 sovereign_ai/
 │
-├── 📁 app/
+├── app/
+│   ├── admin/
+│   │   ├── __init__.py
+│   │   ├── employee_management.py
+│   │   └── panel.py
 │   │
-│   ├── 🤖 agent/
-│   │   ├── classifier.py
-│   │   ├── domain.py
+│   ├── agent/
 │   │   └── orchestrator.py
 │   │
-│   ├── 🔌 api/
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   ├── database.py
+│   │   ├── history.py
+│   │   ├── service.py
+│   │   ├── session.py
+│   │   └── ui.py
 │   │
-│   ├── 🔐 security/
-│   │   └── audit.py
+│   ├── knowledge/
+│   │   ├── __init__.py
+│   │   ├── chunker.py
+│   │   ├── database.py
+│   │   ├── ingestion.py
+│   │   ├── processor.py
+│   │   └── service.py
 │   │
-│   ├── 🛠️ tools/
-│   │   ├── document_generator.py
-│   │   ├── file_reader.py
-│   │   ├── registry.py
-│   │   └── sandbox/
-│   │       └── executor.py
+│   ├── models/
+│   │   └── ollama_client.py
 │   │
-│   └── 🖥️ ui.py
+│   └── ui.py
 │
-├── 📚 rag/
-│   ├── documents/
-│   ├── qa.py
+├── rag/
 │   └── retriever.py
 │
-├── 🧪 training/
-│   ├── build_chunks.py
-│   ├── build_sft_dataset.py
-│   └── clean_chunks.py
+├── data/
+│   ├── auth/
+│   ├── input/
+│   ├── knowledge/
+│   ├── output/
+│   └── corpus/
 │
-├── 🧪 test_mistral_mrpl.py
-├── 🧠 train_mistral_mrpl.py
-├── 🖥️ ui.py
-├── 📦 requirements.txt
-├── 🔒 .gitignore
-└── 📖 README.md
+├── tests/
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
 ```
 
----
-
-# 🧱 Main Components
-
-## `app/agent/`
-
-Contains the agentic reasoning layer.
-
-### `classifier.py`
-Handles classification of incoming requests and helps determine the appropriate domain or processing path.
-
-### `domain.py`
-Contains domain-oriented definitions used by the agent system.
-
-### `orchestrator.py`
-Coordinates the agent workflow and connects requests with appropriate processing components and tools.
-
----
-
-## `app/tools/`
-
-Contains reusable system capabilities.
-
-### `file_reader.py`
-Provides file and document reading functionality.
-
-### `document_generator.py`
-Provides document-generation functionality.
-
-### `registry.py`
-Provides registration and management of available tools.
-
-### `sandbox/executor.py`
-Provides controlled execution functionality for operations requiring an execution environment.
-
----
-
-## `app/security/`
-
-Contains security and traceability components.
-
-### `audit.py`
-Provides audit-oriented functionality for tracking system activity.
-
----
-
-## `rag/`
-
-Contains the Retrieval-Augmented Generation pipeline.
-
-### `retriever.py`
-Handles retrieval of relevant information from the prepared knowledge base.
-
-### `qa.py`
-Connects retrieved information with question-answering workflows.
-
----
-
-## `training/`
-
-Contains data preparation workflows for domain-specific model development.
-
-The training pipeline supports:
-
-- Dataset construction
-- Chunk generation
-- Data cleaning
-- Training-data preparation
-
----
-
-# 🧪 Model Training Workflow
-
-The project contains workflows for preparing and training domain-specific data.
-
-```text
-🏭 Industrial Domain Data
-          │
-          ▼
-📥 Dataset Construction
-          │
-          ▼
-🧹 Data Cleaning
-          │
-          ▼
-✂️ Chunk / Sample Preparation
-          │
-          ▼
-📚 Training Dataset
-          │
-          ▼
-🧠 Model Training
-          │
-          ▼
-🧪 Evaluation
-          │
-          ▼
-🧠 Local Domain Model
-```
-
-Training-related components include:
-
-```text
-train_mistral_mrpl.py
-test_mistral_mrpl.py
-training/build_sft_dataset.py
-training/build_chunks.py
-training/clean_chunks.py
-```
-
-Training and inference are treated as separate workloads because their compute requirements can differ significantly.
-
----
-
-# 🔐 Security & Data Privacy
-
-Security is a core consideration because industrial AI systems may process confidential information.
-
-The platform follows an **on-premise-first architecture**.
-
-```text
-🏭 Industrial Data
-        │
-        ▼
-🔐 Organization-Controlled Infrastructure
-        │
-        ▼
-🤖 Sovereign AI Workbench
-        │
-   ┌────┼────┐
-   ▼    ▼    ▼
-  RAG  Tools Local LLM
-   │    │    │
-   └────┼────┘
-        ▼
-   💬 AI Response
-```
-
-The project contains security-oriented components for:
-
-- 🔐 Audit logging
-- 🛡️ Controlled tool execution
-- 📦 Sandboxed execution
-- 🧩 Tool registration
-- 🏠 Local processing
-
-### Important
-
-This repository represents a prototype/workbench. Production deployment requires additional:
-
-- Authentication
-- Authorization
-- Role-Based Access Control
-- Network isolation
-- Secrets management
-- Monitoring
-- Threat modeling
-- Security testing
-- Compliance validation
-
----
-
-# 🗂️ Data Handling
-
-The public repository intentionally does **not** include the project's local industrial data directory.
-
-Sensitive or environment-specific content should remain outside the public repository, including:
-
-- 📄 Confidential industrial documents
-- 📊 Private datasets
-- 🖼️ Inspection records
-- 🔑 Credentials
-- 🔐 API keys
-- 🧠 Local model weights
-- 📝 Environment-specific configuration
-- 🖥️ Server-specific files
-
-The `.gitignore` configuration prevents local project data, logs, model files, archives, and secrets from being committed accidentally.
+> Local data, authentication databases, generated outputs, and other development artifacts are excluded from Git where appropriate.
 
 ---
 
 # ⚙️ Technology Stack
 
-| Layer | Technology |
-|---|---|
-| 🐍 Language | Python |
-| 🧠 LLM | Mistral |
-| 🏠 Local Runtime | Ollama |
-| 🤖 AI Architecture | Agentic AI |
-| 📚 Knowledge Retrieval | RAG |
-| 📄 Document Processing | Python |
-| 🧪 Model Training | Mistral Training Workflow |
-| 🖥️ Interface | Python UI |
-| 🔐 Security | Audit + Controlled Execution |
-| 🌐 Version Control | Git |
-| ☁️ Repository | GitHub |
-| 🏭 Deployment Model | On-Premise |
+## AI / LLM
+
+- Python
+- Ollama
+- Mistral
+- LLaVA
+- Open-weight local models
+- Agent orchestration
+
+## Retrieval / Knowledge
+
+- PyMuPDF
+- TF-IDF
+- Cosine similarity
+- Section-aware chunking
+- Local document processing
+
+## Application
+
+- Streamlit
+- Python modules
+- SQLite authentication database
+
+## Data / Backend
+
+- PostgreSQL
+- SQLite
+- Pandas
+- NumPy
+
+## APIs / Development
+
+- FastAPI
+- REST APIs
+- Git
+- GitHub
+
+## Document / Artifact Generation
+
+- python-docx
+
+---
+
+# 🖥️ Hardware Demonstration Environment
+
+The prototype has been tested in a college GPU environment using:
+
+```text
+GPU:
+NVIDIA A100-PCIE-40GB
+
+VRAM:
+40 GB
+
+Python:
+3.12.x
+
+CUDA-enabled PyTorch:
+Available
+
+Ollama:
+Local model serving
+```
+
+The architecture is intended to scale according to the organization's available compute infrastructure.
 
 ---
 
 # 🚀 Installation
 
-## 1. Clone the Repository
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/Vignesh14007/sovereign-ai.git
 cd sovereign-ai
 ```
 
-## 2. Create a Virtual Environment
+## 2. Create a virtual environment
+
+```bash
+python3 -m venv .venv
+```
+
+## 3. Activate it
 
 ### Linux / macOS
 
 ```bash
-python3 -m venv .venv
 source .venv/bin/activate
 ```
 
 ### Windows
 
-```bash
-python -m venv .venv
+```powershell
 .venv\Scripts\activate
 ```
 
-## 3. Install Dependencies
+## 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+## 5. Install and run Ollama
 
-# 🧠 Local LLM Setup
+Install Ollama according to your operating system and ensure the local Ollama service is available.
 
-The project uses an Ollama-compatible local LLM workflow.
-
-Install Ollama from:
-
-https://ollama.com/
-
-Verify the installation:
-
-```bash
-ollama --version
-```
-
-Pull the required model:
+Example model setup:
 
 ```bash
 ollama pull mistral
+ollama pull llava
 ```
 
-Verify:
+The exact model names can be changed according to the deployment environment.
+
+---
+
+# ▶️ Run the Application
+
+From the project root:
 
 ```bash
-ollama list
+PYTHONPATH="$PWD" streamlit run app/ui.py
 ```
+
+The Streamlit interface will provide the authentication flow and route the user to the appropriate workspace.
 
 ---
 
-# ▶️ Running the Application
+# 🔑 Prototype Authentication
 
-The project contains the main UI entry point:
+The development environment may contain locally created prototype accounts.
+
+**Do not reuse development credentials in production.**
+
+For a real deployment:
+
+- Change all initial passwords
+- Use strong password policies
+- Add rate limiting
+- Add account lockout
+- Integrate organization identity where appropriate
+- Use secure secret storage
+- Add one-time activation tokens
+- Centralize audit logging
+
+Authentication data is intentionally kept outside the Git repository.
+
+---
+
+# 🧪 Validation Examples
+
+### Local RAG
 
 ```text
-ui.py
+Question
+   ↓
+Retriever
+   ↓
+Top relevant sections
+   ↓
+Mistral
+   ↓
+Evidence-grounded answer
 ```
 
-If the configured interface uses Streamlit:
-
-```bash
-streamlit run ui.py
-```
-
-The exact execution command may depend on the current application configuration.
-
----
-
-# 📚 RAG Workflow
-
-The repository contains document-processing workflows for preparing the retrieval corpus.
-
-Typical workflow:
+### Code task
 
 ```text
-📄 Source Documents
-       │
-       ▼
-🧩 build_chunks.py
-       │
-       ▼
-🧹 clean_chunks.py
-       │
-       ▼
-🔍 Filtering / Preparation
-       │
-       ▼
-📚 Knowledge Corpus
-       │
-       ▼
-🔎 retriever.py
-       │
-       ▼
-💬 qa.py
-       │
-       ▼
-🧠 LLM Response
+Task:
+Calculate the average of 10, 20, 30 and 40.
+
+Execution:
+Local Python
+
+Result:
+25.0
+```
+
+### Vision task
+
+```text
+Engineering drawing
+       ↓
+LLaVA
+       ↓
+Structured visual interpretation
+       ↓
+Industrial response
+```
+
+### Inspection workflow
+
+```text
+Inspection request
+       ↓
+Knowledge retrieval
+       ↓
+Local LLM analysis
+       ↓
+Review note
+       ↓
+DOCX output
 ```
 
 ---
 
-# 🧪 Training Workflow
+# 🛡️ Security Principles
 
-Domain-specific training workflows are separated from the runtime application.
+The project follows these design principles:
+
+### 1. Local-first AI
+
+Use local models instead of requiring external AI inference APIs.
+
+### 2. Least privilege
+
+Users should receive only the capabilities and documents authorized for their role.
+
+### 3. Controlled tools
+
+The AI should not automatically receive unrestricted access to the operating system.
+
+### 4. Evidence-based responses
+
+RAG responses should be grounded in retrieved evidence.
+
+### 5. Auditability
+
+Important user operations should be traceable.
+
+### 6. Separation of user data
+
+Employee history should be scoped to the authenticated employee.
+
+### 7. No secrets in Git
+
+Credentials, `.env` files, local databases, generated outputs, and local data are excluded from the public repository.
+
+---
+
+# ⚠️ Production Security Requirements
+
+This repository is a **prototype / hackathon implementation**, not a production-certified industrial security platform.
+
+Before deployment in a real industrial environment, additional controls should be implemented and validated, including:
+
+- Enterprise identity and SSO
+- MFA
+- Network segmentation
+- Firewall and egress restrictions
+- Containerized tool execution
+- OS-level sandboxing
+- Resource quotas
+- Secure secret management
+- Encryption at rest and in transit
+- Centralized audit logging
+- Security monitoring
+- Vulnerability scanning
+- Model provenance and integrity checks
+- Document access policies
+- Data retention policies
+- Backup and disaster recovery
+- Human approval gates for consequential actions
+
+---
+
+# 🔬 Domain Adaptation Strategy
+
+The platform is designed around three complementary layers:
 
 ```text
-Domain Data
-    ↓
-Dataset Construction
-    ↓
-Cleaning
-    ↓
-Training Dataset
-    ↓
-Model Training
-    ↓
-Evaluation
-    ↓
-Local Model
+                 Domain Adaptation
+                       │
+        ┌──────────────┼──────────────┐
+        ▼              ▼              ▼
+ Prompt / Task       Local RAG      LoRA / QLoRA
+ Specialization      Grounding      Fine-tuning
 ```
 
-Relevant scripts:
+The prototype primarily demonstrates:
+
+1. Task/prompt specialization
+2. Local document grounding through RAG
+
+Parameter-efficient fine-tuning can be introduced when authorized domain-specific training examples are available.
+
+The prototype does **not** claim to have been fine-tuned on confidential MRPL data.
+
+---
+
+# 🧭 Development Roadmap
+
+## Phase 1 — Foundation
+
+- [x] Local LLM inference
+- [x] Streamlit application
+- [x] Basic orchestrator
+- [x] Local model integration
+
+## Phase 2 — Knowledge Intelligence
+
+- [x] PDF processing
+- [x] Section-aware chunking
+- [x] Local RAG
+- [x] MRPL document demonstration
+- [x] Knowledge management foundation
+
+## Phase 3 — Security
+
+- [x] Administrator authentication
+- [x] Employee authentication
+- [x] Role separation
+- [x] Permission management
+- [x] Employee history
+- [ ] Enterprise SSO
+- [ ] MFA
+- [ ] One-time activation tokens
+- [ ] Central audit infrastructure
+
+## Phase 4 — Agentic Intelligence
+
+- [x] Task classification
+- [x] Capability routing
+- [x] Local tool execution workflow
+- [ ] Dedicated data agent
+- [ ] Dedicated analytics agent
+- [ ] Dedicated knowledge agent
+- [ ] Dedicated verification agent
+- [ ] Multi-step planning
+
+## Phase 5 — Multimodal Intelligence
+
+- [x] Local vision model
+- [x] Image analysis
+- [x] Engineering drawing demonstration
+- [ ] OCR pipeline
+- [ ] Scanned-document understanding
+- [ ] Multimodal evidence correlation
+
+## Phase 6 — Industrial Workbench
+
+- [ ] SQL agent
+- [ ] Time-series analytics
+- [ ] Anomaly detection
+- [ ] Industrial charts
+- [ ] Cross-source evidence correlation
+- [ ] Structured report generation
+- [ ] PPT / Excel generation
+- [ ] Verification layer
+
+## Phase 7 — Production Hardening
+
+- [ ] Container sandbox
+- [ ] Network egress controls
+- [ ] Enterprise identity
+- [ ] Centralized logging
+- [ ] Security monitoring
+- [ ] Model governance
+- [ ] Deployment automation
+
+---
+
+# 🏆 Intended Final Workflow
+
+The long-term workflow is:
 
 ```text
-train_mistral_mrpl.py
-test_mistral_mrpl.py
-training/build_sft_dataset.py
-training/build_chunks.py
-training/clean_chunks.py
-```
-
----
-
-# 🔬 Development Approach
-
-The platform is designed as a modular AI workbench rather than a single-purpose chatbot.
-
-```text
-              🧠 REASONING
-                   │
-                   ▼
-              🤖 AGENTS
-                   │
-          ┌────────┼────────┐
-          ▼        ▼        ▼
-        📚 RAG   🛠️ TOOLS  📊 DATA
-          │        │        │
-          └────────┼────────┘
-                   ▼
-              🏠 LOCAL LLM
-                   │
-                   ▼
-              🔐 SECURITY
-                   │
-                   ▼
-                💬 UI
-```
-
-This separation allows individual components to evolve independently.
-
----
-
-# 📈 Current Scope
-
-The current workbench establishes a foundation for:
-
-- 🤖 Agent-based request routing
-- 🧠 Domain classification
-- 🔄 Tool orchestration
-- 🏠 Local LLM interaction
-- 📚 Retrieval-Augmented Generation
-- 📄 Industrial document processing
-- 🧪 Domain-specific training workflows
-- 📁 File and document interaction
-- 🔒 Controlled tool execution
-- 🔐 Audit-oriented operations
-- 🏭 On-premise deployment
-
----
-
-# 🔮 Future Development
-
-## 🗄️ Enterprise Data Connectors
-
-Extend the agent layer to interact with:
-
-- SQL databases
-- Time-series databases
-- Industrial historians
-- Maintenance management systems
-- Operational data platforms
-
----
-
-## 🖼️ Advanced Multimodal Reasoning
-
-Extend multimodal capabilities with:
-
-- Machine inspection images
-- Visual anomaly analysis
-- OCR
-- Technical diagrams
-- Image-text reasoning
-
----
-
-## 🤖 Advanced Agent Planning
-
-Extend the orchestrator toward multi-step planning:
-
-```text
-User Question
-      ↓
-Planning
-      ↓
-Tool Selection
-      ↓
-Multiple Tool Calls
-      ↓
-Evidence Validation
-      ↓
-Reasoning
-      ↓
-Final Answer
-```
-
----
-
-## 🔐 Enterprise Access Control
-
-Future enterprise capabilities can include:
-
-- User authentication
-- Role-Based Access Control
-- Permission-aware retrieval
-- Department-level access
-- Tool-level authorization
-
----
-
-## 📊 Observability
-
-Potential monitoring capabilities:
-
-- Agent traces
-- Tool execution traces
-- Retrieval metrics
-- Model latency
-- Error monitoring
-- Resource utilization
-- Evaluation metrics
-
----
-
-# 🏭 Target Enterprise Architecture
-
-```text
-                         👤 USER
+                         USER
                            │
                            ▼
-                  🔐 Authentication
+                  Authentication / RBAC
                            │
                            ▼
-                  🤖 Agent Orchestrator
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-       📚 RAG          🗄️ Data Tools     🛠️ AI Tools
-          │                │                │
-          ▼                ▼                ▼
-   Knowledge Base     Enterprise DBs     Local LLM
-          │                │                │
-          └────────────────┼────────────────┘
-                           ▼
-                    🔎 Evidence Layer
+                  Natural Language Query
                            │
                            ▼
-                    🧠 AI Reasoning
+                  Task Understanding
                            │
                            ▼
-                    💬 Final Response
+                    Task Planning
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+          Data Agent   Knowledge     Vision Agent
+             │           Agent            │
+             ▼             ▼             ▼
+        SQL / Time     Local RAG       Images /
+        Series Data    Documents       Drawings
+             │             │             │
+             └─────────────┼─────────────┘
+                           ▼
+                    Evidence Fusion
                            │
                            ▼
-                    🔐 Audit Layer
+                      Verification
+                           │
+                           ▼
+                    Local LLM Response
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+          Answer       Artifact       Audit
+                           │
+                           ▼
+                       User
 ```
 
 ---
 
-# 🎯 Project Objective
+# ⭐ Key Value Proposition
 
-The long-term objective of Sovereign AI Workbench is to provide a unified industrial intelligence layer where users can interact with complex enterprise information using natural language.
+> **Sovereign AI Workbench is designed to move industrial AI from simple question-answering toward controlled, evidence-driven investigation using locally hosted AI, authorized enterprise knowledge, tools, and multimodal evidence.**
 
-Instead of requiring engineers to manually navigate multiple systems:
+The key architectural idea is:
 
 ```text
-Database
+Understand
    ↓
-Reports
+Plan
    ↓
-Maintenance Records
+Retrieve
    ↓
-SOPs
+Query
    ↓
-Inspection Records
+Analyze
    ↓
-Historical Failures
+Correlate
    ↓
-Manual Analysis
-```
-
-the target workflow is:
-
-```text
-Natural Language Question
-          ↓
-   Agentic Investigation
-          ↓
-  Multiple Enterprise Sources
-          ↓
-     Evidence Retrieval
-          ↓
-     Local AI Reasoning
-          ↓
- Contextual Industrial Insight
+Verify
+   ↓
+Generate
+   ↓
+Audit
 ```
 
 ---
 
-# ⚠️ Limitations
+# 👨‍💻 Project Team
 
-This repository represents an active prototype/workbench rather than a production-certified industrial platform.
+### Team ALGNITE
 
-Important limitations include:
+Built as a Smart India Hackathon 2026 project for:
 
-- Production-grade access control requires additional implementation.
-- Industrial cybersecurity requires infrastructure-level controls beyond the application.
-- AI-generated responses require appropriate validation before operational decisions.
-- Model performance depends on the quality and coverage of available knowledge.
-- Retrieval quality depends on document processing and indexing.
-- Training and inference requirements depend on the selected model and available hardware.
-- Production deployment requires additional monitoring, testing, fault tolerance, and security validation.
+**SIH26117 — Mangalore Refinery and Petrochemicals Limited (MRPL)**
 
-The platform should therefore be evaluated against the organization's operational, security, and compliance requirements before production use.
+**Theme:** Smart Automation  
+**Category:** Software
 
 ---
 
-# 📁 Repository Structure
+# 📌 Repository
 
-```text
-sovereign-ai/
-│
-├── 📁 app/
-│   ├── 🤖 agent/
-│   │   ├── classifier.py
-│   │   ├── domain.py
-│   │   └── orchestrator.py
-│   │
-│   ├── 🔌 api/
-│   │
-│   ├── 🔐 security/
-│   │   └── audit.py
-│   │
-│   ├── 🛠️ tools/
-│   │   ├── document_generator.py
-│   │   ├── file_reader.py
-│   │   ├── registry.py
-│   │   └── sandbox/
-│   │       └── executor.py
-│   │
-│   └── 🖥️ ui.py
-│
-├── 📁 rag/
-│   ├── documents/
-│   ├── qa.py
-│   └── retriever.py
-│
-├── 📁 training/
-│   ├── build_chunks.py
-│   ├── build_sft_dataset.py
-│   └── clean_chunks.py
-│
-├── 🧪 test_mistral_mrpl.py
-├── 🧠 train_mistral_mrpl.py
-├── 🖥️ ui.py
-├── 📦 requirements.txt
-├── 🔒 .gitignore
-└── 📖 README.md
-```
+**GitHub:**  
+https://github.com/Vignesh14007/sovereign-ai
 
 ---
 
-# 🤝 Development Principles
+# 📄 Disclaimer
 
-The project follows these engineering principles:
+This repository represents a **hackathon / research prototype**.
 
-### 🧩 Modular Architecture
-Separate agents, tools, retrieval, security, training, and interface components.
+It demonstrates architectural concepts and working prototype capabilities using local/open-weight models and publicly available or synthetic demonstration data.
 
-### 🔐 Secure Data Handling
-Keep sensitive industrial data and credentials outside the public source repository.
+It should not be interpreted as a production-certified industrial control, safety, cybersecurity, or decision-making system.
 
-### 🏠 Local-First AI
-Support local model inference and retrieval for controlled environments.
-
-### 🛠️ Extensible Tools
-Add new capabilities as modular tools instead of coupling everything to one workflow.
-
-### 📚 Evidence-Oriented Responses
-Use retrieval to provide relevant context before response generation.
-
-### 🔎 Traceability
-Maintain audit-oriented components for system activity and tool execution.
-
-### 🧪 Reproducibility
-Keep data preparation and training workflows structured and repeatable.
+Any deployment involving real industrial data should be performed only with appropriate organizational authorization, security controls, validation, and human oversight.
 
 ---
 
-# 📌 Project Information
+# ⭐ Project Vision
 
-| Field | Details |
-|---|---|
-| 🏷️ Project | Sovereign AI Workbench |
-| 📋 Problem Statement | SIH26117 |
-| 🏭 Organization | Mangalore Refinery and Petrochemicals Limited (MRPL) |
-| 💻 Category | Software |
-| 🎯 Theme | Smart Automation |
-| 🧠 Architecture | Agentic Multimodal AI |
-| 🏠 Deployment | On-Premise |
-| 📚 Retrieval | RAG |
-| 🧠 Local LLM | Mistral + Ollama |
-| 🐍 Language | Python |
+The long-term vision is to build a **controlled industrial AI workbench** where engineers can ask complex questions in natural language and receive evidence-backed assistance across structured data, documents, images, and analytical tools — while keeping sensitive information within the organization's approved computing environment.
 
----
-
-# 🛡️ Data & Security Notice
-
-This public repository contains the **software implementation and development workflows**.
-
-Private industrial documents, local datasets, credentials, model files, and environment-specific files are intentionally excluded from version control.
-
-Do not commit confidential enterprise information, API keys, passwords, private certificates, or production credentials to this repository.
-
----
-
-<p align="center">
-
-### 🏭 Sovereign AI Workbench
-
-<strong>Agentic AI • RAG • Multimodal Intelligence • Local LLM • On-Premise AI</strong>
-
-</p>
+**Sovereign AI Workbench — Understand industrial data. Investigate with AI. Keep control of the data.**
